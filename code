@@ -1,0 +1,57 @@
+from bs4 import BeautifulSoup
+import urllib3
+import re
+import urllib.request
+import numpy as np
+import time
+
+urlpage='https://www.paruvendu.fr/annonces/velo/strasbourg/'
+
+def get_page(urlpage,element ,html_class):
+    """
+    From an link and a html class that you select by inspecting manually the page
+    Return a list with elements that matched this class
+    """
+    # Get page in html
+    req = urllib3.PoolManager()
+    res = req.request('GET', urlpage)
+    soup = BeautifulSoup(res.data, 'html.parser')
+    
+    # Return elements that matched the html class in a list
+    content = soup.find_all(element ,class_= html_class)
+    
+    return content 
+
+content=get_page(urlpage,'div','debarras-annonce')
+content
+len(content) #15
+
+
+apercus=re.findall('<p>\r\n(.*?)\r',str(content))
+links=get_page(urlpage,'a','globann')
+price=re.findall('(.*?)€',str(content))
+#titles=re.findall(r'title="(.*?)\(',str.lower(str(content))) ## Décalage des titres
+titles=re.findall('<h3>(.*,?)\r',str.lower(str(content)))
+len(titles)  #14  ===> Manque un titre
+
+
+title_velo=[]
+price_velo=[]
+link_velo=[]
+apercu_velo=[]
+content
+
+
+def get_titre(titles):
+    #Extracting titles and prices: 
+    for i in range(len(titles)):
+        if re.match(r'^v.lo',str(titles[i])) or re.match(r'^vtt',str(titles[i])):
+            if int(price[i])<=50:
+                title_velo.append(titles[i])
+                price_velo.append(price[i])
+                apercu_velo.append(apercus[i])
+                link_velo.append(link[i])
+    return title_velo
+
+get_titre(titles)
+print(len(title_velo))
