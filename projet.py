@@ -168,7 +168,7 @@ from email.mime.text import MIMEText
 
 message = MIMEMultipart()
 message['From'] = 'miaou.test01@gmail.com'
-message['To'] = 'yass.ramil67@gmail.com'
+message['To'] = 'tyjiang95@gmail.com'
 message['Subject'] = 'A new bicycle link was found on the website' 
 
 
